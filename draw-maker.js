@@ -28,6 +28,7 @@ function text2array() {
     var textarea = document.getElementById('input-text');
     var lines = textarea.value.split(/\r\n|\n/).filter(line => line.trim().length > 0);
     var mode = document.getElementById('mode');
+    var objs = Array();
     switch (mode.value) {
         case 'T':
             var sepaletor = "\t";
@@ -36,18 +37,19 @@ function text2array() {
             var sepaletor = ",";
             break;
     }
-    console.log(lines);
+    //    console.log(lines);
     lines.forEach(element => {
         var token = element.split(sepaletor);
         var i = 0;
         var obj = new Pair(token[i++], token[i++], token[i++], token[i++], token[i++]);
-        console.log(obj);
+        objs.push(obj);
     });
+    return objs;
 }
 
 /**
  * 配列をテーブルに出力
  */
 function array2table(data) {
-
+    console.log(data);
 }
