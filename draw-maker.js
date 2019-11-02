@@ -10,7 +10,33 @@ function Pair(player1, team1, player2, team2, seed) {
     this.seed = seed;
 
     this.getFriendship = function(obj){
-        console.log(obj);
+        if(obj === this){
+            return 0;
+        }
+        if(obj instanceof Array){
+            var sum = 0;
+            obj.forEach(element => {
+                sum += this.getFriendship(element);
+            });
+            return sum;
+        }else if(obj instanceof Pair){
+            var score = 0;
+            if(this.team1 == obj.team1){
+                score ++;
+            }
+            if(this.team1 == obj.team2){
+                score ++;
+            }
+            if(this.team2 == obj.team1){
+                score ++;
+            }
+            if(this.team2 == obj.team2){
+                score ++;
+            }
+            return score;
+        }else{
+            console.log('error');
+        }
     }
     
 }
@@ -59,8 +85,17 @@ function text2array() {
  * @param {*} data 
  */
 function makeDraw(data){
+    data.sort(function(a, b){
+/*
+        seed順を最優先
+        同チームの多い方を優先
+        その他・・・
+*/
+        // SEED
+        return b.getFriendship(data) - a.getFriendship(data);
+    });
     data.forEach(element => {
-        console.log(element.getFriendship(data));
+        console.log(element,element.getFriendship(data));
     });
     return data;
 }
@@ -69,5 +104,6 @@ function makeDraw(data){
  * 配列をテーブルに出力
  */
 function array2table(data) {
-//    console.log(data);
+    // 既存テーブルがあれば削除
+    // 組数に合わせて配分？
 }
