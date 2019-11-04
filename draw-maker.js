@@ -1,15 +1,24 @@
-function Unit() {
 
-}
+/**
+ * ダブルスペアを表すクラス
+ * 
+ * @param {String} player1 
+ * @param {String} team1 
+ * @param {String} player2 
+ * @param {String} team2 
+ * @param {Number} seed 
+ */
+class Pair extends Object{
+    constructor(player1, team1, player2, team2, seed){
+        super();
+        this.player1 = player1;
+        this.team1 = team1;
+        this.player2 = player2;
+        this.team2 = team2;
+        this.seed = seed;
+    }
 
-function Pair(player1, team1, player2, team2, seed) {
-    this.player1 = player1;
-    this.team1 = team1;
-    this.player2 = player2;
-    this.team2 = team2;
-    this.seed = seed;
-
-    this.getFriendship = function(obj){
+    getFriendship(obj){
         if(obj === this){
             return 0;
         }
@@ -21,18 +30,10 @@ function Pair(player1, team1, player2, team2, seed) {
             return sum;
         }else if(obj instanceof Pair){
             var score = 0;
-            if(this.team1 == obj.team1){
-                score ++;
-            }
-            if(this.team1 == obj.team2){
-                score ++;
-            }
-            if(this.team2 == obj.team1){
-                score ++;
-            }
-            if(this.team2 == obj.team2){
-                score ++;
-            }
+            score += (this.team1 == obj.team1) ? 1 : 0;
+            score += (this.team1 == obj.team2) ? 1 : 0;
+            score += (this.team2 == obj.team1) ? 1 : 0;
+            score += (this.team2 == obj.team2) ? 1 : 0;
             return score;
         }else{
             console.log('error');
@@ -41,6 +42,16 @@ function Pair(player1, team1, player2, team2, seed) {
     
 }
 
+/**
+ * ラウンドロビンの対戦ブロックを表すクラス
+ * 
+ * @param {Numver} capacity ブロック内のユニット数
+ */
+class Block extends Array{
+    constructor(capacity){
+        super(capacity);
+    }        
+}
 /**
  * 
  */
@@ -51,6 +62,8 @@ window.onload = function() {
         data = makeDraw(data);
         array2table(data);
     });
+
+    button.click();
 }
 
 /**
@@ -85,6 +98,14 @@ function text2array() {
  * @param {*} data 
  */
 function makeDraw(data){
+//    switch(data.length){
+//    case 6:
+        var blocks = Array(new Block(3), new Block(3));
+        //        break;
+//    }
+    // TODO: テーブルを作る
+    // テーブルの配列を返す
+    // 
     data.sort(function(a, b){
 /*
         seed順を最優先
