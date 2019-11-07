@@ -112,6 +112,11 @@ dol
  * @param {*} data 
  */
 function makeDraw(data) {
+    /*  TODO:
+        シード順に振り分け
+        一番人数の多いチーム所属から振り分け
+            なるべく同じチームが当たらないように
+    */
     var blockcount = Math.ceil(data.length / 4);
     var blocks = [...Array(blockcount)].map(x => new Block());  // blockcount個のBlockの配列
     var data2 = Array.from(data);
@@ -156,5 +161,29 @@ function array2table(blocks) {
             tr.cells[1].textContent = pair.team2;
         });
         div.appendChild(table);
+        // TODO:コピー用ボタンと関数
+        var button = document.createElement('button');
+        button.textContent = 'コピー';
+        button.addEventListener('click', function(){
+            var range = document.createRange();
+            range.selectNodeContents(table);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy')
+        });
+        div.appendChild(button);
     });
+}
+
+
+/**
+ * テーブルの中身をクリップボードにコピー
+ * 
+ * @param {String} tableid コピー対象のテーブルのID 
+ */
+function copyTableToClipboard(tableid){
+    var table = document.getElementById(tableid);
+    var range = document.createRange();
+    range.selectNodeContents(table);
+    window.getSelection().addRange(range);
 }

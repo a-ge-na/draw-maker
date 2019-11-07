@@ -26,7 +26,10 @@ div#right-part{
 div#right-part table{
     border: solid thin #ccc;
     border-collapse: collapse;
-    margin-bottom: 2em;
+}
+
+div#right-part button{
+    margin-bottom: 1em;
 }
 
 div#right-part table tr td:nth-child(1){
