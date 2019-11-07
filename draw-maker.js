@@ -8,7 +8,7 @@
  * @param {Number} seed 
  */
 class Pair extends Object {
-    constructor(player1, team1, player2, team2, seed) {
+    constructor(player1, player2, team1, team2, seed) {
         super();
         this.player1 = player1;
         this.team1 = team1;
