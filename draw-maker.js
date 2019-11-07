@@ -72,8 +72,8 @@ window.onload = function() {
     var button = document.getElementById('button-go');
     button.addEventListener('click', function() {
         var data = text2array();
-        data = makeDraw(data);
-        array2table(data);
+        var blocks = makeDraw(data);
+        array2table(blocks);
     });
 
     button.click();
@@ -104,6 +104,7 @@ function text2array() {
         objs.push(obj);
     });
     return objs;
+dol
 }
 
 /**
@@ -124,14 +125,36 @@ function makeDraw(data) {
             return b.getFriendship(data2) - a.getFriendship(data2);
         });
     }
-console.log(blocks);
 return blocks;
 }
 
 /**
  * 配列をテーブルに出力
  */
-function array2table(data) {
+function array2table(blocks) {
     // 既存テーブルがあれば削除
+    div = document.getElementById('right-part');
+    div.innerText = '';
+
     // 組数に合わせて配分？
+    var i = "A".charCodeAt(0);
+    blocks.forEach(block => {
+        var table = document.createElement('table');
+        table.id = 'block-' + String.fromCharCode(i++);  
+        block.forEach(pair => {
+            var tr;
+            // TODO: このへん美しくしたい
+            tr = table.insertRow(-1);
+            tr.insertCell(-1);
+            tr.insertCell(-1);
+            tr.cells[0].textContent = pair.player1;
+            tr.cells[1].textContent = pair.team1;
+            tr = table.insertRow(-1);
+            tr.insertCell(-1);
+            tr.insertCell(-1);
+            tr.cells[0].textContent = pair.player2;
+            tr.cells[1].textContent = pair.team2;
+        });
+        div.appendChild(table);
+    });
 }
