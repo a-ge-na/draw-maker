@@ -112,14 +112,27 @@ dol
  * @param {*} data 
  */
 function makeDraw(data) {
-    /*  TODO:
-        シード順に振り分け
-        一番人数の多いチーム所属から振り分け
-            なるべく同じチームが当たらないように
-    */
     var blockcount = Math.ceil(data.length / 4);
     var blocks = [...Array(blockcount)].map(x => new Block());  // blockcount個のBlockの配列
     var data2 = Array.from(data);
+
+    // シード順にソート。設定なしは999として扱う
+    data2.sort(function(a, b) {
+        var seeda = a.seed ? a.seed : 999;
+        var seedb = b.seed ? b.seed : 999;
+        return seeda - seedb;
+    });
+    console.table(data2);
+
+    // シード設定があるペアを設定(ブロック数より少なければ空き順に)
+    while(data2[0].seed){
+        pair = data2.shift();
+        console.table(pair);
+    }
+    /*  TODO:
+        一番人数の多いチーム所属から振り分け
+            なるべく同じチームが当たらないように
+    */
     data2.sort(function(a, b) {
         return b.getFriendship(data2) - a.getFriendship(data2);
     });

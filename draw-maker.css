@@ -26,6 +26,7 @@ div#right-part{
 div#right-part table{
     border: solid thin #ccc;
     border-collapse: collapse;
+    font-size: 9pt;
 }
 
 div#right-part button{
