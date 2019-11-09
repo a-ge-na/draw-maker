@@ -1,11 +1,5 @@
 /**
  * ダブルスペアを表すクラス
- * 
- * @param {String} player1 
- * @param {String} team1 
- * @param {String} player2 
- * @param {String} team2 
- * @param {Number} seed 
  */
 class Pair extends Object {
     constructor(player1, player2, team1, team2, seed) {
@@ -44,10 +38,11 @@ class Pair extends Object {
 
 /**
  * ラウンドロビンの対戦ブロックを表すクラス
- * 
- * @param {Numver} capacity ブロック内のユニット数
  */
 class Block extends Array {
+    /**
+     * ブロックの生成
+     */
     constructor() {
         super();
     }
@@ -65,8 +60,9 @@ class Block extends Array {
         return score;
     }
 }
+
 /**
- * 
+ window読み込み時の処理
  */
 window.onload = function() {
     var button = document.getElementById('button-go');
@@ -122,12 +118,14 @@ function makeDraw(data) {
         var seedb = b.seed ? b.seed : 999;
         return seeda - seedb;
     });
-    console.table(data2);
 
     // シード設定があるペアを設定(ブロック数より少なければ空き順に)
     while(data2[0].seed){
         pair = data2.shift();
-        console.table(pair);
+        blocks.sort(function(a, b){
+            return a.length - b.length;
+        });
+        blocks[0].push(pair);
     }
     /*  TODO:
         一番人数の多いチーム所属から振り分け
@@ -143,7 +141,9 @@ function makeDraw(data) {
             return b.getFriendship(data2) - a.getFriendship(data2);
         });
     }
-return blocks;
+//    console.table(blocks);
+    console.table(getTeamArray(data));
+    return blocks;
 }
 
 /**
@@ -188,6 +188,29 @@ function array2table(blocks) {
     });
 }
 
+/**
+ * チーム名:数 の配列を作る。
+ * @param {Array} data 
+ */
+function getTeamArray(data){
+    var array = new Array();
+    data.forEach(element => {
+        if( array[element.team1] ){
+            array[element.team1] ++;
+        }else{
+            array[element.team1] = 1;
+        }
+        if( array[element.team2] ){
+            array[element.team2] ++;
+        }else{
+            array[element.team2] = 1;
+        }
+    });
+    array.sort(function(a, b){
+        return b - a;
+    });
+    return array;
+}
 
 /**
  * テーブルの中身をクリップボードにコピー
