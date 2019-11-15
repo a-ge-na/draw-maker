@@ -142,7 +142,8 @@ function makeDraw(data) {
         });
     }
 //    console.table(blocks);
-    console.table(getTeamArray(data));
+    var a = getTeams(data);
+    console.table(a);
     return blocks;
 }
 
@@ -192,24 +193,30 @@ function array2table(blocks) {
  * チーム名:数 の配列を作る。
  * @param {Array} data 
  */
-function getTeamArray(data){
-    var array = new Array();
+function getTeams(data){
+    // {name:チーム名, count:数}なオブジェクトを格納
+    var teams = new Array;
     data.forEach(element => {
-        if( array[element.team1] ){
-            array[element.team1] ++;
+        teamcount = teams.find(team => (team.name == element.team1));
+        if(!teamcount){
+            teamcount = {name: element.team1, count: 1};
+            teams.push(teamcount);
         }else{
-            array[element.team1] = 1;
+            teamcount.count ++;
         }
-        if( array[element.team2] ){
-            array[element.team2] ++;
+        teamcount = teams.find(team => (team.name == element.team2));
+        if(!teamcount){
+            teamcount = {name: element.team2, count: 1};
+            teams.push(teamcount);
         }else{
-            array[element.team2] = 1;
+            teamcount.count ++;
         }
     });
-    array.sort(function(a, b){
-        return b - a;
+    teams.sort(function(a, b){
+        return b.count - a.count;
     });
-    return array;
+    console.table(teams);
+    return teams;
 }
 
 /**
