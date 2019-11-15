@@ -62,6 +62,20 @@ class Block extends Array {
 }
 
 /**
+ * @description ドローの優先度の高さを返す
+ * 
+ * @param {Pair} pair 
+ * @param {Array} teams 
+ */
+function getDrawProirity(pair, teams){
+// TODO: シードの優先度があればそれを高く
+    var priority = 0;
+    priority += (teams.length - teams.findIndex(team => team.name == pair.team1));
+    priority += (teams.length - teams.findIndex(team => team.name == pair.team2));
+    return priority;
+}
+
+/**
  window読み込み時の処理
  */
 window.onload = function() {
@@ -110,18 +124,25 @@ dol
 function makeDraw(data) {
     var blockcount = Math.ceil(data.length / 4);
     var blocks = [...Array(blockcount)].map(x => new Block());  // blockcount個のBlockの配列
-    var data2 = Array.from(data);
+    var pairs = Array.from(data);
 
+    // {チーム：エントリー数}の配列を取得。配列は多いチームから順に並べている。
+    var teams = getTeams(data);
+ //   console.table(teams);
+    pairs.forEach(pair => {
+//        console.log(pair, getDrawProirity(pair, teams));
+    });
+    console.log("----");
     // シード順にソート。設定なしは999として扱う
-    data2.sort(function(a, b) {
+    pairs.sort(function(a, b) {
         var seeda = a.seed ? a.seed : 999;
         var seedb = b.seed ? b.seed : 999;
         return seeda - seedb;
     });
 
     // シード設定があるペアを設定(ブロック数より少なければ空き順に)
-    while(data2[0].seed){
-        pair = data2.shift();
+    while(pairs[0].seed){
+        pair = pairs.shift();
         blocks.sort(function(a, b){
             return a.length - b.length;
         });
@@ -131,19 +152,19 @@ function makeDraw(data) {
         一番人数の多いチーム所属から振り分け
             なるべく同じチームが当たらないように
     */
-    data2.sort(function(a, b) {
-        return b.getFriendship(data2) - a.getFriendship(data2);
+
+    // TODO:チーム数の多い順にソート？
+    pairs.sort(function(a, b) {
+        return getDrawProirity(b, teams) -  getDrawProirity(a, teams);
     });
-    while(pair = data2.shift()){
+    while(pair = pairs.shift()){
         var block = blocks.reduce((a, b) => a.getRefusalScore(pair) <= b.getRefusalScore(pair) ? a : b);
+console.log(pair);
         block.push(pair);
-        data2.sort(function(a, b) {
-            return b.getFriendship(data2) - a.getFriendship(data2);
+        pairs.sort(function(a, b) {
+            return b.getFriendship(pairs) - a.getFriendship(pairs);
         });
     }
-//    console.table(blocks);
-    var a = getTeams(data);
-    console.table(a);
     return blocks;
 }
 
@@ -215,7 +236,6 @@ function getTeams(data){
     teams.sort(function(a, b){
         return b.count - a.count;
     });
-    console.table(teams);
     return teams;
 }
 
