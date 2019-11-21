@@ -1,17 +1,24 @@
 /**
  * ダブルスペアを表すクラス
+ * @constructor
+ * @param {String} player1
+ * @param {String} player2
+ * @param {String} team1
+ * @param {String} team2
+ * @param {Number} seed
  */
-class Pair extends Object {
-    constructor(player1, player2, team1, team2, seed) {
-        super();
-        this.player1 = player1;
-        this.team1 = team1;
-        this.player2 = player2;
-        this.team2 = team2;
-        this.seed = seed;
-    }
+Pair = function(player1, player2, team1, team2, seed) {
+    this.player1 = player1;
+    this.team1 = team1;
+    this.player2 = player2;
+    this.team2 = team2;
+    this.seed = seed;
 
-    getFriendship(obj) {
+    /**
+     * 引数のペアまたはペア配列との同チーム度合いを返す。
+     * @param {Pair|Pair[]} obj 
+     */
+    function getFriendship(obj) {
         if (obj === this) {
             return 0;
         }
@@ -33,26 +40,19 @@ class Pair extends Object {
             console.log('error');
         }
     }
-
 }
 
 /**
  * ラウンドロビンの対戦ブロックを表すクラス
+ * @constructor
+ * @extends Array
  */
-class Block extends Array {
-    /**
-     * ブロックの生成
-     */
-    constructor() {
-        super();
-    }
-
-    /**
+Block = function(){
+     /**
      * ペアの拒否レベル
-     * 
      * @param {Pair} Obj 
      */
-    getRefusalScore(Obj) {
+    function getRefusalScore(Obj) {
         var score = 0;
         score += 10000 * this.length;
         score += 100 * Obj.getFriendship(this);
@@ -60,6 +60,7 @@ class Block extends Array {
         return score;
     }
 }
+Block.prototype = Object.create( Array.prototype);
 
 /**
  * @description ドローの優先度の高さを返す
@@ -91,6 +92,7 @@ window.onload = function() {
 
 /**
  * 入力されたテキストを配列に変換
+ * @returns {Pair[]} 選手1,選手2,チーム1,チーム2,シード の配列
  */
 function text2array() {
     var textarea = document.getElementById('input-text');
@@ -118,14 +120,14 @@ dol
 }
 
 /**
- * 
- * @param {*} data 
+ * ドローの作成
+ * @param {*} data
+ * @returns {Block[]} ドローを格納したBlockの配列 
  */
 function makeDraw(data) {
     var blockcount = Math.ceil(data.length / 4);
     var blocks = [...Array(blockcount)].map(x => new Block());  // blockcount個のBlockの配列
     var pairs = Array.from(data);
-
     // {チーム：エントリー数}の配列を取得。配列は多いチームから順に並べている。
     var teams = getTeams(data);
  //   console.table(teams);
@@ -158,18 +160,19 @@ function makeDraw(data) {
         return getDrawProirity(b, teams) -  getDrawProirity(a, teams);
     });
     while(pair = pairs.shift()){
-        var block = blocks.reduce((a, b) => a.getRefusalScore(pair) <= b.getRefusalScore(pair) ? a : b);
-console.log(pair);
-        block.push(pair);
-        pairs.sort(function(a, b) {
-            return b.getFriendship(pairs) - a.getFriendship(pairs);
-        });
+//        var block = blocks.reduce((a, b) => a.getRefusalScore(pair) <= b.getRefusalScore(pair) ? a : b);
+//        block.push(pair);
+//        pairs.sort(function(a, b) {
+//           return b.getFriendship(pairs) - a.getFriendship(pairs);
+//        });
+        console.log(">", pair, getDrawProirity(pair, teams));
     }
     return blocks;
 }
 
 /**
- * 配列をテーブルに出力
+ * 配列をHTMLのテーブルとして出力。
+ * @param {Block[]} Blockの配列
  */
 function array2table(blocks) {
     // 既存テーブルがあれば削除
