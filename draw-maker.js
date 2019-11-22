@@ -12,13 +12,13 @@ Pair = function(player1, player2, team1, team2, seed) {
     this.team1 = team1;
     this.player2 = player2;
     this.team2 = team2;
-    this.seed = seed;
+    this.seed = seed ? Number(seed) : 9999;
 
     /**
      * 引数のペアまたはペア配列との同チーム度合いを返す。
      * @param {Pair|Pair[]} obj 
      */
-    function getFriendship(obj) {
+    this.getFriendship = function (obj) {
         if (obj === this) {
             return 0;
         }
@@ -64,7 +64,7 @@ Block.prototype = Object.create( Array.prototype);
 
 /**
  * @description ドローの優先度の高さを返す
- * 
+ * @deprecated 不要になりそう
  * @param {Pair} pair 
  * @param {Array} teams 
  */
@@ -121,20 +121,38 @@ dol
 
 /**
  * ドローの作成
- * @param {*} data
+ * @param {Pair[]} data
  * @returns {Block[]} ドローを格納したBlockの配列 
  */
 function makeDraw(data) {
     var blockcount = Math.ceil(data.length / 4);
     var blocks = [...Array(blockcount)].map(x => new Block());  // blockcount個のBlockの配列
     var pairs = Array.from(data);
+    var newpairs = new Array();
+
+    // DOTO: シード順にソート
+
     // {チーム：エントリー数}の配列を取得。配列は多いチームから順に並べている。
     var teams = getTeams(data);
- //   console.table(teams);
-    pairs.forEach(pair => {
-//        console.log(pair, getDrawProirity(pair, teams));
+
+    // チームごとに、所属するペアを取得する。同チームのペアは優先度を高くする。
+    teams.forEach(team => {
+        var teamspair = pairs.filter(pair => 
+            (pair.team1 == team.name || pair.team2 == team.name)
+            );
+        teamspair.sort( function(a,b){
+            return b.getFriendship(teamspair) - a.getFriendship(teamspair);
+        });
+        newpairs = newpairs.concat(teamspair);
+        pairs = pairs.filter( pair =>
+            !(pair.team1 == team.name || pair.team2 == team.name)
+            );
     });
-    console.log("----");
+
+    console.table(newpairs);
+
+
+
     // シード順にソート。設定なしは999として扱う
     pairs.sort(function(a, b) {
         var seeda = a.seed ? a.seed : 999;
@@ -165,7 +183,7 @@ function makeDraw(data) {
 //        pairs.sort(function(a, b) {
 //           return b.getFriendship(pairs) - a.getFriendship(pairs);
 //        });
-        console.log(">", pair, getDrawProirity(pair, teams));
+//        console.log(">", pair, getDrawProirity(pair, teams));
     }
     return blocks;
 }
