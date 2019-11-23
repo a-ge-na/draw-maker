@@ -1,18 +1,19 @@
 div#left-part,div#center-part,div#right-part{
     float: left;
-/*    border: solid 1px #ccc; */
     min-width: 100px;
     min-height: 90%;
     padding: 4px;
 }
 
 div#left-part{
- //   background-color: #ccf;
+}
+
+div#left-part textarea{
+    display: flex;
 }
 
 div#center-part{
     text-align: center;
-//    background-color: #ffc;
 }
 
 div#center-part select{
@@ -20,7 +21,6 @@ div#center-part select{
 }
 
 div#right-part{
-//    background-color: #fdd;
 }
 
 div#right-part table{
