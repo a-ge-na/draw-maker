@@ -248,11 +248,15 @@ function copyTableToClipboard(tableid){
     // 一旦テーブルの内容をテキストボックスに移す
     let table = document.getElementById(tableid);
     let textarea = document.getElementById('copypa');
-    
-    textarea.textContent = table.textContent;
+    let text = '';
+    for(tr of table.rows){
+        console.log(tr.cells[0].textContent);
+        text = text.concat(tr.cells[0].textContent, "\t");
+        text = text.concat(tr.cells[1].textContent, "\n");
+    }
+    textarea.textContent = text;
 
     // テキストボックスからクリップボードへ
-    let range = document.createRange();
-    range.selectNodeContents(textarea);
-    window.getSelection().addRange(range);
+    textarea.select();
+    document.execCommand('copy');
 }

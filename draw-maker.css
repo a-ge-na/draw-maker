@@ -8,8 +8,13 @@ div#left-part,div#center-part,div#right-part{
 div#left-part{
 }
 
-div#left-part textarea{
+textarea#input-text, select#drawmode{
     display: flex;
+    margin-bottom: 1em;
+}
+
+textarea#copypa{
+    display: none;
 }
 
 div#center-part{
