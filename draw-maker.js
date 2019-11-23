@@ -63,20 +63,6 @@ Block = function(){
 Block.prototype = Object.create( Array.prototype);
 
 /**
- * @description ドローの優先度の高さを返す
- * @deprecated 不要になりそう
- * @param {Pair} pair 
- * @param {Array} teams 
- */
-function getDrawProirity(pair, teams){
-// TODO: シードの優先度があればそれを高く
-let priority = 0;
-    priority += (teams.length - teams.findIndex(team => team.name == pair.team1));
-    priority += (teams.length - teams.findIndex(team => team.name == pair.team2));
-    return priority;
-}
-
-/**
  window読み込み時の処理
  */
 window.onload = function() {

@@ -13,8 +13,13 @@ textarea#input-text, select#drawmode{
     margin-bottom: 1em;
 }
 
+div.hidden{
+    display: flex;
+}
 textarea#copypa{
-    display: none;
+    width: 0px;
+    height: 0px;
+    display: flex;
 }
 
 div#center-part{
